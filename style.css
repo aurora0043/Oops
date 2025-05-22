@@ -1,0 +1,149 @@
+body {
+
+  font-family: "Noto Sans TC", "Segoe UI", sans-serif;
+
+  background-color: #E8F4F8;
+
+  margin: 0;
+
+  padding: 20px;
+
+  color: #333;
+
+}
+
+
+
+.container {
+
+  max-width: 800px;
+
+  margin: auto;
+
+  background: white;
+
+  border-radius: 15px;
+
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+
+  padding: 30px;
+
+}
+
+
+
+h1 {
+
+  text-align: center;
+
+  color: #2980b9;
+
+  font-weight: bold;
+
+}
+
+
+
+.subtitle {
+
+  text-align: center;
+
+  color: #666;
+
+  margin-bottom: 20px;
+
+}
+
+
+
+.section {
+
+  margin-top: 30px;
+
+}
+
+
+
+textarea, input[type="text"], select {
+
+  width: 100%;
+
+  padding: 10px;
+
+  margin: 5px 0 15px 0;
+
+  border: 1px solid #ccc;
+
+  border-radius: 8px;
+
+  font-size: 16px;
+
+}
+
+
+
+button {
+
+  background-color: #6dd5ed;
+
+  background-image: linear-gradient(to right, #6dd5ed, #2193b0);
+
+  border: none;
+
+  color: white;
+
+  padding: 10px 20px;
+
+  margin: 5px;
+
+  border-radius: 25px;
+
+  font-size: 14px;
+
+  cursor: pointer;
+
+  transition: transform 0.1s;
+
+}
+
+
+
+button:hover {
+
+  transform: scale(1.05);
+
+}
+
+
+
+.practice-button {
+
+  display: inline-block;
+
+  text-align: center;
+
+  background: #ff9a9e;
+
+  background-image: linear-gradient(to right, #ff9a9e, #fad0c4);
+
+  color: white;
+
+  padding: 12px 24px;
+
+  border-radius: 25px;
+
+  text-decoration: none;
+
+  font-weight: bold;
+
+  font-size: 16px;
+
+}
+
+
+
+.practice-button:hover {
+
+  transform: scale(1.05);
+
+}

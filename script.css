@@ -1,0 +1,381 @@
+let 題庫資料 = JSON.parse(localStorage.getItem("題庫資料") || "{}");
+
+let 當前題庫 = Object.keys(題庫資料)[0] || null;
+
+
+
+// index.html 功能
+
+if (document.getElementById("題庫選擇")) {
+
+  const 題庫選擇 = document.getElementById("題庫選擇");
+
+  const 題目輸入區 = document.getElementById("題目輸入區");
+
+
+
+  function 更新題庫下拉選單() {
+
+    題庫選擇.innerHTML = "";
+
+    Object.keys(題庫資料).forEach((庫) => {
+
+      const opt = document.createElement("option");
+
+      opt.value = opt.textContent = 庫;
+
+      題庫選擇.appendChild(opt);
+
+    });
+
+    題庫選擇.value = 當前題庫;
+
+  }
+
+
+
+  window.新增題庫 = function () {
+
+    const 新名稱 = document.getElementById("新題庫名稱").value.trim();
+
+    if (新名稱 && !題庫資料[新名稱]) {
+
+      題庫資料[新名稱] = [];
+
+      當前題庫 = 新名稱;
+
+      更新題庫下拉選單();
+
+      儲存資料();
+
+    }
+
+  };
+
+
+
+  題庫選擇.addEventListener("change", (e) => {
+
+    當前題庫 = e.target.value;
+
+  });
+
+
+
+  window.新增一題 = function () {
+
+    const div = document.createElement("div");
+
+    div.className = "題目區塊";
+
+    div.innerHTML = `
+
+      <input type="text" class="題目" placeholder="題目內容" /><br/>
+
+      <input type="text" class="選項" placeholder="選項 A" />
+
+      <input type="text" class="選項" placeholder="選項 B" />
+
+      <input type="text" class="選項" placeholder="選項 C" />
+
+      <input type="text" class="選項" placeholder="選項 D" /><br/>
+
+      <input type="text" class="答案" placeholder="正確答案 A/B/C/D" />
+
+      <textarea class="解釋" placeholder="解釋"></textarea><hr/>
+
+    `;
+
+    題目輸入區.appendChild(div);
+
+  };
+
+
+
+  window.儲存閱讀組 = function () {
+
+    const passage = document.getElementById("閱讀文章").value.trim();
+
+    if (!passage || !當前題庫) return;
+
+
+
+    const questions = [];
+
+    題目輸入區.querySelectorAll(".題目區塊").forEach((區) => {
+
+      const question = 區.querySelector(".題目").value;
+
+      const options = Array.from(區.querySelectorAll(".選項")).map((i) => i.value);
+
+      const answer = 區.querySelector(".答案").value.trim();
+
+      const explanation = 區.querySelector(".解釋").value;
+
+      if (question && options.every(Boolean) && answer) {
+
+        questions.push({ question, options, answer, explanation });
+
+      }
+
+    });
+
+
+
+    if (questions.length) {
+
+      題庫資料[當前題庫].push({ passage, questions });
+
+      儲存資料();
+
+      alert("儲存成功！");
+
+      document.getElementById("閱讀文章").value = "";
+
+      題目輸入區.innerHTML = "";
+
+    }
+
+  };
+
+  window.儲存單題 = function () {
+
+    const q = document.getElementById("單題內容").value.trim();
+
+    const opts = Array.from(document.querySelectorAll(".單題選項")).map(i => i.value.trim());
+
+    const ans = document.getElementById("單題答案").value.trim().toUpperCase();
+
+    const exp = document.getElementById("單題解釋").value.trim();
+
+
+
+    if (!當前題庫 || !q || opts.some(o => !o) || !["A","B","C","D"].includes(ans)) {
+
+      alert("請填寫完整題目與四個選項，並輸入 A~D 的正確答案！");
+
+      return;
+
+    }
+
+
+
+    const 題組 = {
+
+      passage: "", // 空文章
+
+      questions: [{ question: q, options: opts, answer: ans, explanation: exp }]
+
+    };
+
+
+
+    題庫資料[當前題庫].push(題組);
+
+    localStorage.setItem("題庫資料", JSON.stringify(題庫資料));
+
+
+
+    // 清空欄位
+
+    document.getElementById("單題內容").value = "";
+
+    document.querySelectorAll(".單題選項").forEach(i => i.value = "");
+
+    document.getElementById("單題答案").value = "";
+
+    document.getElementById("單題解釋").value = "";
+
+
+
+    alert("單題儲存成功！");
+
+  };
+
+  window.匯出資料 = function () {
+
+    const dataStr = JSON.stringify(題庫資料);
+
+    const blob = new Blob([dataStr], { type: "application/json" });
+
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+
+    a.href = url;
+
+    a.download = "oops_錯題題庫.json";
+
+    a.click();
+
+  };
+
+
+
+  window.匯入資料 = function (e) {
+
+    const file = e.target.files[0];
+
+    if (!file) return;
+
+    const reader = new FileReader();
+
+    reader.onload = (evt) => {
+
+      try {
+
+        const json = JSON.parse(evt.target.result);
+
+        題庫資料 = json;
+
+        當前題庫 = Object.keys(json)[0];
+
+        儲存資料();
+
+        location.reload();
+
+      } catch {
+
+        alert("格式錯誤");
+
+      }
+
+    };
+
+    reader.readAsText(file);
+
+  };
+
+
+
+  function 儲存資料() {
+
+    localStorage.setItem("題庫資料", JSON.stringify(題庫資料));
+
+  }
+
+
+
+  更新題庫下拉選單();
+
+}
+
+
+
+// practice.html 功能
+
+if (document.getElementById("練習區")) {
+
+  const 所有閱讀題組 = Object.values(題庫資料).flat();
+
+  let 題組索引 = 0;
+
+  let 題目索引 = 0;
+
+  const 題組順序 = 所有閱讀題組.map((_, i) => i).sort(() => Math.random() - 0.5);
+
+
+
+  const 文章區 = document.getElementById("文章區塊");
+
+  const 題目區 = document.getElementById("題目區塊");
+
+  const 選項區 = document.getElementById("選項區塊");
+
+  const 解釋區 = document.getElementById("解釋區塊");
+
+  const 下一題按鈕 = document.getElementById("下一題按鈕");
+
+
+
+  function 顯示題目() {
+
+    if (題組索引 >= 題組順序.length) {
+
+      文章區.innerHTML = "<h2>練習完成！</h2>";
+
+      題目區.innerHTML = "";
+
+      選項區.innerHTML = "";
+
+      解釋區.innerHTML = "";
+
+      下一題按鈕.style.display = "none";
+
+      return;
+
+    }
+
+
+
+    const 題組 = 所有閱讀題組[題組順序[題組索引]];
+
+    const 該題 = 題組.questions[題目索引];
+
+    文章區.innerHTML = `<strong>文章：</strong><p>${題組.passage}</p>`;
+
+    題目區.innerHTML = `<strong>題目：</strong><p>${該題.question}</p>`;
+
+
+
+    選項區.innerHTML = "";
+
+    ["A", "B", "C", "D"].forEach((字母, i) => {
+
+      const btn = document.createElement("button");
+
+      btn.textContent = `${字母}. ${該題.options[i]}`;
+
+      btn.onclick = () => {
+
+        解釋區.style.display = "block";
+
+        if (字母 === 該題.answer.toUpperCase()) {
+
+          解釋區.innerHTML = "<strong>答對了！</strong><br/>" + 該題.explanation;
+
+        } else {
+
+          解釋區.innerHTML = `<strong>答錯了，正確答案是 ${該題.answer}</strong><br/>` + 該題.explanation;
+
+        }
+
+        下一題按鈕.style.display = "inline-block";
+
+      };
+
+      選項區.appendChild(btn);
+
+    });
+
+  }
+
+
+
+  window.下一題 = function () {
+
+    const 題組 = 所有閱讀題組[題組順序[題組索引]];
+
+    題目索引++;
+
+    if (題目索引 >= 題組.questions.length) {
+
+      題組索引++;
+
+      題目索引 = 0;
+
+    }
+
+    解釋區.style.display = "none";
+
+    下一題按鈕.style.display = "none";
+
+    顯示題目();
+
+  };
+
+
+
+  顯示題目();
+
+}

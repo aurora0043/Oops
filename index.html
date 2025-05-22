@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+
+<html lang="zh-Hant">
+
+<head>
+
+  <meta charset="UTF-8" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Oops! 錯題研究所</title>
+
+  <link rel="stylesheet" href="style.css" />
+
+</head>
+
+<body>
+
+  <div class="container">
+
+    <h1>Oops! 錯題研究所</h1>
+
+    <p class="subtitle">讓錯題變成你的小夥伴！</p>
+
+
+
+    <div class="section">
+
+      <label for="題庫選擇">選擇題庫：</label>
+
+      <select id="題庫選擇"></select>
+
+      <input type="text" id="新題庫名稱" placeholder="新增題庫名稱" />
+
+      <button onclick="新增題庫()">新增題庫</button>
+
+    </div>
+
+
+
+    <div class="section">
+
+      <h2>新增閱讀群組與題目</h2>
+
+      <textarea id="閱讀文章" rows="4" placeholder="輸入閱讀文章內容（會套用在此組所有題目）"></textarea>
+
+      <div id="題目輸入區"></div>
+
+      <button onclick="新增一題()">＋新增一題</button>
+
+      <button onclick="儲存閱讀組()">儲存閱讀群組</button>
+
+    </div>
+
+
+
+    <div class="section">
+
+      <h2>新增單題（無文章）</h2>
+
+      <input type="text" id="單題內容" placeholder="輸入單題題目" /><br />
+
+      <input type="text" class="單題選項" placeholder="選項 A" />
+
+      <input type="text" class="單題選項" placeholder="選項 B" />
+
+      <input type="text" class="單題選項" placeholder="選項 C" />
+
+      <input type="text" class="單題選項" placeholder="選項 D" /><br />
+
+      <input type="text" id="單題答案" placeholder="正確答案 A/B/C/D" />
+
+      <textarea id="單題解釋" placeholder="解釋"></textarea><br />
+
+      <button onclick="儲存單題()">儲存單題</button>
+
+    </div>
+
+
+
+    <div class="section">
+
+      <a class="practice-button" href="practice.html">▶ 開始錯題練習</a>
+
+    </div>
+
+
+
+    <div class="section">
+
+      <h2>題庫備份</h2>
+
+      <button onclick="匯出資料()">匯出 JSON</button>
+
+      <input type="file" onchange="匯入資料(event)" />
+
+    </div>
+
+  </div>
+
+
+
+  <script src="script.js"></script>
+
+</body>
+
+</html>
